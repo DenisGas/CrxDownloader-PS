@@ -90,7 +90,8 @@ function Get-CrxFile {
             $extId = $Url.Split("/")[-1].Split('?')[0]
             Write-Host "🆔 Extension ID: $extId" -ForegroundColor Yellow
 
-            $extName = ($Url -replace '.*/detail/', '').Split('/')[0]
+            $extNameEncoded = ($Url -replace '.*/detail/', '').Split('/')[0]
+            $extName = [System.Web.HttpUtility]::UrlDecode($extNameEncoded)
             Write-Host "📝 Extension Name: $extName" -ForegroundColor Yellow
 
             $chromeVersion = Get-ChromeVersion
@@ -119,6 +120,7 @@ function Get-CrxFile {
         Write-error "⚠️ Error during download process: $_"
     }
 }
+
 
 Export-ModuleMember -Function Get-ChromeVersion
 Export-ModuleMember -Function Get-CrxFile
