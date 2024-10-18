@@ -186,6 +186,8 @@ function Get-CrxFileAsZip {
     }
 }
 
+Write-Host "🚀 CrxDownloader module successfully imported!" -ForegroundColor Green
+
 Export-ModuleMember -Function Get-CrxFileAsZip
 Export-ModuleMember -Function Get-ChromeVersion
 Export-ModuleMember -Function Get-CrxFile
