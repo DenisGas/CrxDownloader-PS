@@ -3,6 +3,12 @@
 This PowerShell module provides functions to retrieve the installed version of Google Chrome and to download `.crx` files (Chrome extensions) directly from the Chrome Web Store.
 
 
+## Requirements
+
+![PowerShell](https://img.shields.io/badge/PowerShell-7%2B-blue?logo=powershell)
+
+- PowerShell >= 7.0
+
 ## Preview
 ![image](https://github.com/user-attachments/assets/65446f05-288c-4ad1-acc7-fdb89198e2f9)
 
