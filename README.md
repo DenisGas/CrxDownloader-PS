@@ -54,42 +54,66 @@ If you want to import this module directly from GitHub (without downloading it l
 
 ---
 
+Here's the updated documentation for the `Get-CrxFile`, `Get-CrxFileAsZip`, and existing `Get-ChromeVersion` functions:
+
 ## Usage
 
-### 1. `Get-ChromeVersion`
-
+### 1. **Get-ChromeVersion**
 This function retrieves the installed version of Google Chrome from the Windows registry.
 
-#### Example:
+**Example**:
 ```powershell
 Get-ChromeVersion
 ```
 
-**Output**:  
-If Chrome is found, the version will be displayed as:
-```plaintext
-129.0.6668.101
-```
-If Chrome is not found, the function will return `null`.
+**Output**:
+- If Chrome is found, it will display the version, for example:
+  ```
+  129.0.6668.101
+  ```
+- If Chrome is not found, the function will return `null`.
 
-### 2. `Get-CrxFile`
+---
 
-This function downloads a `.crx` file for a specified Chrome extension by providing the extension URL and an optional save path.
+### 2. **Get-CrxFile**
+This function downloads a `.crx` file for a specified Chrome extension using the extension URL and an optional save path.
 
-#### Parameters:
-- **`Url`** (required): The URL of the Chrome extension (e.g., from the Chrome Web Store).
-- **`SavePath`** (optional): The local path where the `.crx` file should be saved. Defaults to the user's Downloads folder if not provided. Can also use `"."` to save to the current directory.
+**Parameters**:
+- **Url (required)**: The URL of the Chrome extension page (e.g., from the Chrome Web Store).
+- **SavePath (optional)**: The local path where the `.crx` file should be saved. Defaults to the user's Downloads folder. You can also use `"."` to save the file in the current directory.
 
-#### Example:
+**Example**:
 ```powershell
 Get-CrxFile -Url "https://chromewebstore.google.com/detail/jutsu-next-series/godmnckhgkgojikjpiahppfnmhgkfpjp?hl=ru" -SavePath "C:\Users\User\Downloads"
 ```
+This will download the `.crx` file for the specified extension to the given folder.
 
-This will download the `.crx` file for the extension to the specified folder.
-
-#### Default Behavior:
-- If Chrome is installed, the function will attempt to match the current version for download.
+**Default Behavior**:
+- If Chrome is installed, the function will attempt to match the current version of Chrome for downloading the appropriate extension version.
 - If Chrome is not found, it defaults to version `49.0`.
+
+---
+
+### 3. **Get-CrxFileAsZip**
+This function downloads a `.crx` file for a specified Chrome extension and automatically changes the file extension to `.zip`.
+
+**Parameters**:
+- **Url (required)**: The URL of the Chrome extension page (e.g., from the Chrome Web Store).
+- **SavePath (optional)**: The local path where the `.zip` file should be saved. Defaults to the user's Downloads folder. You can also use `"."` to save the file in the current directory.
+
+**Example**:
+```powershell
+Get-CrxFileAsZip -Url "https://chromewebstore.google.com/detail/jutsu-next-series/godmnckhgkgojikjpiahppfnmhgkfpjp?hl=ru" -SavePath "C:\Users\User\Downloads"
+```
+This command will download the `.crx` file for the specified extension, and automatically change its extension to `.zip`.
+
+### Default Behavior**:
+- If Chrome is installed, the function will attempt to match the current version of Chrome for downloading the appropriate extension version.
+- If Chrome is not found, it defaults to version `49.0`.
+
+### Important Notes:
+1. Both functions (`Get-CrxFile` and `Get-CrxFileAsZip`) use the version of Chrome to construct the correct URL for downloading the CRX file.
+2. If no version of Chrome is found, version `49.0` is used by default for compatibility.
 
 ---
 
