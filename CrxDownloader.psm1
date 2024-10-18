@@ -43,7 +43,6 @@ function Get-ChromeVersion {
         return $null
     }
 }
-
 function Get-CrxFile {
     <#
     .SYNOPSIS
@@ -61,7 +60,7 @@ function Get-CrxFile {
     The local path where the CRX file will be saved. If not specified, defaults to the Downloads folder.
 
     .OUTPUTS
-    Downloads the CRX file to the specified location.
+    Returns the path to the downloaded CRX file.
 
     .EXAMPLE
     Get-CrxFile -Url "https://chromewebstore.google.com/detail/jutsu-next-series/godmnckhgkgojikjpiahppfnmhgkfpjp?hl=ru" -SavePath "C:\Users\User\Downloads"
@@ -110,17 +109,83 @@ function Get-CrxFile {
 
             $date = (Get-Date).ToString("yyyy-MM-dd_HH-mm-ss")
             $fileName = "$extName-$date.crx"
+            $filePath = "$SavePath\$fileName"
 
-            Invoke-WebRequest -Uri $downloadUrl -OutFile "$SavePath\$fileName"
-            Write-Host "✅ Extension downloaded successfully to $SavePath\$fileName" -ForegroundColor Green
+            Invoke-WebRequest -Uri $downloadUrl -OutFile $filePath
+            Write-Host "✅ Extension downloaded successfully to $filePath" -ForegroundColor Green
+
+            # Return the path to the downloaded CRX file
+            return $filePath
         } else {
             Write-Host "❌ Invalid URL format." -ForegroundColor Red
+            return $null
         }
     } catch {
         Write-error "⚠️ Error during download process: $_"
+        return $null
     }
 }
 
+function Get-CrxFileAsZip {
+    <#
+    .SYNOPSIS
+    Downloads a CRX file for a specified Chrome extension and renames it to a ZIP file.
 
+    .DESCRIPTION
+    This function takes a URL of a Chrome extension and a save path,
+    downloads the CRX file using Get-CrxFile, and renames it to ZIP.
+
+    .PARAMETER Url
+    The URL of the Chrome extension page.
+
+    .PARAMETER SavePath
+    The local path where the ZIP file will be saved. If not specified, defaults to the Downloads folder.
+
+    .OUTPUTS
+    Returns the path to the renamed ZIP file.
+
+    .EXAMPLE
+    Get-CrxFileAsZip -Url "https://chromewebstore.google.com/detail/jutsu-next-series/godmnckhgkgojikjpiahppfnmhgkfpjp?hl=ru" -SavePath "C:\Users\User\Downloads"
+    #>
+
+    param (
+        [switch]$help,
+        [string]$Url,
+        [string]$SavePath = "$HOME\Downloads"
+    )
+
+    if ($help) {
+        Get-Help Get-CrxFileAsZip -Full
+        return
+    }
+
+    if ($SavePath -eq ".") {
+        $SavePath = Get-Location
+    }
+
+    try {
+        # Use the Get-CrxFile function to download the CRX file
+        $crxFilePath = Get-CrxFile -Url $Url -SavePath $SavePath
+
+        if ($crxFilePath) {
+            $zipFilePath = $crxFilePath -replace '\.crx$', '.zip'
+
+            # Rename CRX to ZIP
+            Rename-Item -Path $crxFilePath -NewName $zipFilePath
+            Write-Host "✅ Renamed to ZIP: $zipFilePath" -ForegroundColor Green
+
+            # Return the path to the renamed ZIP file
+            return $zipFilePath
+        } else {
+            Write-Host "❌ CRX file was not downloaded." -ForegroundColor Red
+            return $null
+        }
+    } catch {
+        Write-error "⚠️ Error during renaming process: $_"
+        return $null
+    }
+}
+
+Export-ModuleMember -Function Get-CrxFileAsZip
 Export-ModuleMember -Function Get-ChromeVersion
 Export-ModuleMember -Function Get-CrxFile
